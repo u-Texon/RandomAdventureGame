@@ -1,0 +1,9 @@
+StartBildschirm:    -Start Knopf zum Spiel starten
+                    -Spiel-laden Knopf zum Spielstand laden
+                    -Beenden Knopf zum Spiel beenden
+                    -Settings Knopf
+
+
+overworld:          -Man kann von level zu level laufen
+                    -Man kann Items(z.B Heiltränke) benutzen
+                    -Man kann zu einem Shop Laufen und Items kaufen
