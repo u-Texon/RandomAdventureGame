@@ -1,5 +1,6 @@
 package main;
 
+import javafx.scene.image.Image;
 import system.Settings;
 
 import javafx.application.Application;
@@ -76,10 +77,11 @@ public class TitleScreen extends Application {
         closeButton.setFont(fontKemco);
         closeButton.setOnAction(e -> stage.close());
 
-        ImageView image = new ImageView("https://www.linux-magazin.de/wp-content/uploads/2016/04/kernel_klein.png");
+        Image knightImage = new Image(new FileInputStream("src/resources/knight.png"), 250, 250, false, false);
+        ImageView knight = new ImageView(knightImage);
 
         parent.setAlignment(Pos.CENTER);
-        parent.getChildren().addAll(image, startButton, settingsButton, closeButton);
+        parent.getChildren().addAll(knight, startButton, settingsButton, closeButton);
 
         Scene scene = new Scene(parent);
         stage.setScene(scene);
