@@ -1,4 +1,4 @@
-package main;
+package windows;
 
 import javafx.scene.image.Image;
 import system.Settings;
@@ -17,7 +17,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import overworld.SelectionScreen;
+import windows.selectionscreen.SelectionScreen;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,13 +25,13 @@ import java.io.FileNotFoundException;
 public class TitleScreen extends Application {
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage primaryStage) throws FileNotFoundException {
         double height = Settings.MIN_HEIGHT * 6;
         double width = Settings.MIN_WIDTH * 6;
-        stage.setTitle("Title Screen");
-        stage.setHeight(height);
-        stage.setWidth(width);
-        stage.setResizable(false);
+        primaryStage.setTitle("Title Screen");
+        primaryStage.setHeight(height);
+        primaryStage.setWidth(width);
+        primaryStage.setResizable(false);
         VBox parent = new VBox();
 
 
@@ -40,13 +40,10 @@ public class TitleScreen extends Application {
                 new FileInputStream("src/resources/Pixel_Bold.ttf"), 50);
         startButton.setFont(fontKemco);
         startButton.setOnAction(actionEvent -> {
-            stage.close();
-            SelectionScreen world = new SelectionScreen();
-            try {
-                world.start(new Stage());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+
+            SelectionScreen screen = new SelectionScreen();
+            screen.changeScene(primaryStage);
+
 
         });
 
@@ -75,7 +72,7 @@ public class TitleScreen extends Application {
 
         Button closeButton = new Button("Close Game");
         closeButton.setFont(fontKemco);
-        closeButton.setOnAction(e -> stage.close());
+        closeButton.setOnAction(e -> primaryStage.close());
 
         Image knightImage = new Image(new FileInputStream("src/resources/knight.png"), 250, 250, false, false);
         ImageView knight = new ImageView(knightImage);
@@ -84,14 +81,14 @@ public class TitleScreen extends Application {
         parent.getChildren().addAll(knight, startButton, settingsButton, closeButton);
 
         Scene scene = new Scene(parent);
-        stage.setScene(scene);
+        primaryStage.setScene(scene);
         scene.setCursor(Cursor.CROSSHAIR);
         scene.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.F) {
-                if (stage.isFullScreen()) {
+                if (primaryStage.isFullScreen()) {
                     parent.setScaleX(1);
                     parent.setScaleY(1);
-                    stage.setFullScreen(false);
+                    primaryStage.setFullScreen(false);
 
                 } else {
                     double newX = Screen.getPrimary().getBounds().getWidth() / width;
@@ -99,11 +96,11 @@ public class TitleScreen extends Application {
 
                     parent.setScaleX(newX);
                     parent.setScaleY(newY);
-                    stage.setFullScreen(true);
+                    primaryStage.setFullScreen(true);
                 }
             }
         });
-        stage.show();
+        primaryStage.show();
     }
 
 

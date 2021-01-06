@@ -1,5 +1,4 @@
 package environment.mobs;
-
 import java.util.Random;
 
 public abstract class Mob {
@@ -13,8 +12,8 @@ public abstract class Mob {
         this.maxHealth = health;
         this.physicATK = physicATK;
         this.maxMana = mana;
-        this.currentHealth = maxHealth;
-        this.currentHealth = maxMana;
+        this.currentHealth = health;
+        this.currentMana = mana;
     }
 
     public double physicAttackOn(Mob mob) {
@@ -76,4 +75,5 @@ public abstract class Mob {
     public void setPhysicATK(double physicATK) {
         this.physicATK = physicATK;
     }
+
 }

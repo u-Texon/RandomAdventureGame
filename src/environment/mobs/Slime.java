@@ -1,6 +1,12 @@
 package environment.mobs;
 
-public class Slime extends Mob {
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class Slime extends Enemy {
     /**
      * standard slime max health
      */
@@ -17,6 +23,21 @@ public class Slime extends Mob {
 
     public Slime(int health, double physicATK, int mana) {
         super(health, physicATK, mana);
+    }
+
+    @Override
+    public String getName() {
+        return "Slime";
+    }
+
+    @Override
+    public ImageView initImage() {
+        try {
+            return new ImageView(new Image(new FileInputStream("src/resources/Slime.gif")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

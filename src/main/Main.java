@@ -1,5 +1,7 @@
 package main;
 
+import windows.TitleScreen;
+
 public final class Main {
     private Main() {
     }

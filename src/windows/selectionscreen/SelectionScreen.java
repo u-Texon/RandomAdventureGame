@@ -1,21 +1,24 @@
-package overworld;
+package windows.selectionscreen;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import system.Settings;
-import fight.FightingScreen;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import windows.fightingscreen.FightWindow;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
-public class SelectionScreen {
+public final class SelectionScreen {
 
 
-    public void start(Stage stage) throws FileNotFoundException {
+    public void changeScene(Stage stage) {
         double height = Settings.MIN_HEIGHT * 6;
         double width = Settings.MIN_WIDTH * 6;
         stage.setHeight(height);
@@ -24,24 +27,30 @@ public class SelectionScreen {
         stage.setTitle("OverWorld");
         stage.setResizable(false);
 
-        ImageView fightButton = new ImageView(new Image(new FileInputStream("src/resources/FightButton.gif")));
-        fightButton.setScaleX(1.5);
-        fightButton.setScaleY(1.5);
+        Image fightButtonImage = null;
+        try {
+            fightButtonImage = new Image(new FileInputStream("src/resources/FightButton.gif"), 400, 100, false, false);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ImageView fightButton = new ImageView(fightButtonImage);
         fightButton.setX(100);
         fightButton.setY(500);
-
         fightButton.setOnMouseClicked(action -> {
-            FightingScreen fight = new FightingScreen();
-            fight.start(new Stage());
-
-            stage.close();
+            try {
+                FightWindow fightWindow = new FightWindow();
+                fightWindow.changeScene(stage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         parent.getChildren().addAll(fightButton);
         Scene scene = new Scene(parent);
         scene.setCursor(Cursor.CROSSHAIR);
+
         stage.setScene(scene);
 
-        stage.show();
     }
 }
