@@ -1,4 +1,5 @@
 package environment.mobs;
+
 import java.util.Random;
 
 public abstract class Mob {
@@ -8,6 +9,12 @@ public abstract class Mob {
     private double physicATK;
     private double currentMana;
 
+    /**
+     * Constructor for a Mob
+     * @param health health
+     * @param physicATK physical attack value
+     * @param mana amount of mana
+     */
     public Mob(int health, double physicATK, int mana) {
         this.maxHealth = health;
         this.physicATK = physicATK;
@@ -16,6 +23,12 @@ public abstract class Mob {
         this.currentMana = mana;
     }
 
+    /**
+     * this mob will attack the selected mob and reducing its HP by the physicalAD of this mob.
+     *
+     * @param mob the mob that will take damage
+     * @return the amount of dmg the selected mob will get
+     */
     public double physicAttackOn(Mob mob) {
         Random random = new Random();
         double percentage = (random.nextInt(41) + 80);
@@ -37,7 +50,7 @@ public abstract class Mob {
     }
 
     public boolean isDead() {
-        return this.currentHealth <= 0;
+        return this.currentHealth <= 0.1;
     }
 
     public int getMaxHealth() {
@@ -56,24 +69,24 @@ public abstract class Mob {
         return currentMana;
     }
 
-    public void setCurrentHealth(double currentHealth) {
-        this.currentHealth = currentHealth;
-    }
-
     public void setCurrentMana(double currentMana) {
         this.currentMana = currentMana;
     }
 
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    public void setMaxMana(int maxMana) {
-        this.maxMana = maxMana;
-    }
-
-    public void setPhysicATK(double physicATK) {
-        this.physicATK = physicATK;
-    }
+    /*
+     * --------------MIGHT USE THIS FOR LEVELING--------------------
+     *
+     *     public void setMaxHealth(int maxHealth) {
+     *         this.maxHealth = maxHealth;
+     *     }
+     *
+     *     public void setMaxMana(int maxMana) {
+     *         this.maxMana = maxMana;
+     *     }
+     *
+     *     public void setPhysicATK(double physicATK) {
+     *         this.physicATK = physicATK;
+     *     }
+     */
 
 }

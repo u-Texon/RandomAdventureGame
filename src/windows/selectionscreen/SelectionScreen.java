@@ -1,7 +1,5 @@
 package windows.selectionscreen;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import system.Settings;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -13,7 +11,6 @@ import windows.fightingscreen.FightWindow;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public final class SelectionScreen {
 
@@ -25,7 +22,6 @@ public final class SelectionScreen {
         stage.setWidth(width);
         Group parent = new Group();
         stage.setTitle("OverWorld");
-        stage.setResizable(false);
 
         Image fightButtonImage = null;
         try {
@@ -38,12 +34,10 @@ public final class SelectionScreen {
         fightButton.setX(100);
         fightButton.setY(500);
         fightButton.setOnMouseClicked(action -> {
-            try {
-                FightWindow fightWindow = new FightWindow();
-                fightWindow.changeScene(stage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            FightWindow fightWindow = new FightWindow();
+            fightWindow.changeScene(stage);
+
         });
 
         parent.getChildren().addAll(fightButton);

@@ -10,7 +10,7 @@ public class Slime extends Enemy {
     /**
      * standard slime max health
      */
-    public static final int HEALTH = 15;
+    public static final int HEALTH = 30;
     /**
      * standard slime attack damage
      */

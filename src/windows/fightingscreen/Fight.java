@@ -1,13 +1,17 @@
 package windows.fightingscreen;
 
+import environment.Player;
 import environment.mobs.Enemy;
 import environment.mobs.Slime;
 
 public final class Fight {
     private static Fight fight = null;
     private Enemy enemy;
+    private Phase phase;
+
 
     private Fight() {
+        phase = Phase.YOUR_TURN;
         enemy = generateNewEnemy();
     }
 
@@ -19,9 +23,9 @@ public final class Fight {
     }
 
     public void resetFight() {
+        phase = Phase.YOUR_TURN;
         enemy = generateNewEnemy();
     }
-
 
 
     private Enemy generateNewEnemy() {

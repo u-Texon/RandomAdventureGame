@@ -1,17 +1,18 @@
 package environment.mobs;
 
-import javafx.scene.control.ProgressBar;
+import bars.HealthBar;
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.scene.image.ImageView;
-
-import java.io.FileNotFoundException;
+import javafx.util.Duration;
 
 public abstract class Enemy extends Mob {
-    private final ProgressBar healthBar;
+    private final HealthBar healthBar;
     private final ImageView image;
 
     public Enemy(int health, double physicATK, int mana) {
         super(health, physicATK, mana);
-        healthBar = new ProgressBar(health);
+        healthBar = new HealthBar(this, 300, 15);
         healthBar.setProgress(1);
         image = initImage();
     }
@@ -20,20 +21,63 @@ public abstract class Enemy extends Mob {
         return image;
     }
 
-    public ProgressBar getHealthBar() {
+    public HealthBar getHealthBar() {
         return healthBar;
     }
 
-    public void updateHealthBar() {
-        if ((getCurrentHealth() / getMaxHealth()) <= 0) {
-            healthBar.setProgress(0);
-        } else {
-            healthBar.setProgress((getCurrentHealth() / getMaxHealth()));
-        }
+    public void spawnAnimation() {
+        final Animation animation = new Transition() {
+            {
+                setCycleDuration(Duration.millis(1000));
+            }
+
+            @Override
+            protected void interpolate(double v) {
+                getImage().setScaleX(v);
+                getImage().setScaleY(v);
+
+                getHealthBar().setScaleX(v);
+                getHealthBar().setScaleY(v);
+            }
+        };
+        animation.play();
+    }
+
+    public void getsHitAnimation() {
+        final Animation animation = new Transition() {
+            {
+                setCycleDuration(Duration.millis(400));
+            }
+
+            @Override
+            protected void interpolate(double v) {
+                if (v < 0.5) {
+                    getImage().setScaleX(1 - v);
+                    getImage().setScaleY(1 - v);
+                } else {
+                    getImage().setScaleX(v);
+                    getImage().setScaleY(v);
+                }
+            }
+        };
+        animation.play();
+    }
+
+    public void die() {
+        final Animation animation = new Transition() {
+            {
+                setCycleDuration(Duration.millis(1000));
+            }
+            @Override
+            protected void interpolate(double v) {
+                getImage().setScaleX(1 - v);
+                getImage().setScaleY(1 - v);
+            }
+        };
+        animation.play();
     }
 
     public abstract String getName();
-
 
     public abstract ImageView initImage();
 }

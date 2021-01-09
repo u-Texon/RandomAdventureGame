@@ -2,6 +2,7 @@ package environment;
 
 import environment.items.Item;
 import environment.mobs.Mob;
+import environment.spells.FireShot;
 import environment.spells.Spell;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public final class Player extends Mob {
         this.gold = 0;
         inventory = new ArrayList<>(); //might use different List type
         spells = new ArrayList<>();
+        spells.add(new FireShot());
     }
 
     public static Player getPlayer() {
@@ -56,5 +58,9 @@ public final class Player extends Mob {
 
     public double getMagicAD() {
         return magicAD;
+    }
+
+    public List<Spell> getSpells() {
+        return spells;
     }
 }

@@ -19,6 +19,7 @@ public abstract class Spell {
             //not enough mana
             return -1;
         }
+        Player.getPlayer().setCurrentMana(Player.getPlayer().getCurrentMana() - manaCost);
         double magicDMG = Player.getPlayer().getMagicAD() + initialDmg;
         Random random = new Random();
         double percentage = (random.nextInt(41) + 80);
