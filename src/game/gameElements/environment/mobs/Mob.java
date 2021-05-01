@@ -1,5 +1,9 @@
 package game.gameElements.environment.mobs;
 
+import game.gameElements.environment.bars.HealthBar;
+import game.gameElements.environment.bars.ManaBar;
+import game.resources.audio.AudioPlayer;
+
 import java.util.Random;
 
 public abstract class Mob {
@@ -8,6 +12,8 @@ public abstract class Mob {
     private double currentHealth;
     private double physicATK;
     private double currentMana;
+    private HealthBar healthBar;
+    private ManaBar manaBar;
 
     /**
      * Constructor for a Mob
@@ -21,6 +27,8 @@ public abstract class Mob {
         this.maxMana = mana;
         this.currentHealth = health;
         this.currentMana = mana;
+        this.healthBar = new HealthBar(this, 300, 15);
+        this.manaBar = new ManaBar(this, 300, 15);
     }
 
     /**
@@ -30,6 +38,7 @@ public abstract class Mob {
      * @return the amount of dmg the selected mob will get
      */
     public double physicAttackOn(Mob mob) {
+        AudioPlayer.getInstance().playPunchSound();
         Random random = new Random();
         double percentage = (random.nextInt(41) + 80);
         double dmgValue = getPhysicATK() * (percentage / 100); //dmg = 80% up to 120% from Mob AD
@@ -39,10 +48,20 @@ public abstract class Mob {
 
     public void takeDmg(double dmgTaken) {
         this.currentHealth -= dmgTaken;
+        if (currentHealth < 0) {
+            currentHealth = 0;
+        }
+        healthBar.updateAndAnimate();
     }
 
     public void heal(double healValue) {
         this.currentHealth = ((currentHealth + healValue) > maxHealth) ? maxHealth : (currentHealth + healValue);
+        healthBar.updateAndAnimate();
+    }
+
+    public void gainMana(double manaValue) {
+        this.currentMana = ((currentMana + manaValue) > maxMana) ? maxMana : (currentMana + manaValue);
+        manaBar.updateAndAnimate();
     }
 
     public double getCurrentHealth() {
@@ -71,6 +90,15 @@ public abstract class Mob {
 
     public void setCurrentMana(double currentMana) {
         this.currentMana = currentMana;
+        manaBar.updateAndAnimate();
+    }
+
+    public HealthBar getHealthBar() {
+        return healthBar;
+    }
+
+    public ManaBar getManaBar() {
+        return manaBar;
     }
 
     /*

@@ -11,7 +11,7 @@ public class Slime extends Enemy {
     /**
      * standard slime max health
      */
-    public static final int HEALTH = 30;
+    public static final int HEALTH = 15;
     /**
      * standard slime attack damage
      */
@@ -38,7 +38,7 @@ public class Slime extends Enemy {
     @Override
     public ImageView initImage() {
         try {
-            return new ImageView(new Image(new FileInputStream(Resource.SLIME_PATH)));
+            return new ImageView(new Image(new FileInputStream(Resource.SLIME)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

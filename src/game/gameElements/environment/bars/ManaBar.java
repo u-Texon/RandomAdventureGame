@@ -24,5 +24,4 @@ public class ManaBar extends Bar {
     protected String getStatusText() {
         return String.format("%1$8s", String.format("%.2f-%d", mob.getCurrentMana(), mob.getMaxMana()));
     }
-
 }

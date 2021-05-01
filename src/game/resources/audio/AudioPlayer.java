@@ -6,6 +6,7 @@ public final class AudioPlayer {
     private static AudioPlayer instance = null;
     private AudioClip punch;
     private AudioClip fire;
+    private AudioClip heal;
 
     private AudioPlayer() {
     }
@@ -19,9 +20,15 @@ public final class AudioPlayer {
 
     public void loadSounds() {
          punch = new AudioClip(AudioPlayer.class.getResource("punch.wav").toString());
-         punch.setVolume(0.2);
+         punch.setVolume(0.1);
          fire = new AudioClip(AudioPlayer.class.getResource("fire.wav").toString());
-         fire.setVolume(0.5);
+         fire.setVolume(0.3);
+         heal = new AudioClip(AudioPlayer.class.getResource("heal.wav").toString());
+         heal.setVolume(0.05);
+    }
+
+    public void playHealSound() {
+        heal.play();
     }
 
     public void playPunchSound() {

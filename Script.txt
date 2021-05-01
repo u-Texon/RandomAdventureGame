@@ -4,6 +4,6 @@ StartBildschirm:    -Start Knopf zum Spiel starten
                     -Settings Knopf
 
 
-java.gameElements.overworld:          -Man kann von level zu level laufen
+overworld:          -Man kann von level zu level laufen
                     -Man kann Items(z.B Heiltränke) benutzen
                     -Man kann zu einem Shop Laufen und Items kaufen

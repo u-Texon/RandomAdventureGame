@@ -39,14 +39,11 @@ public class TitleScreen extends Application {
 
 
         Button startButton = new Button("Start New Game");
-        Font font = Font.loadFont(new FileInputStream(Resource.FONT_PATH), 50);
+        Font font = Font.loadFont(new FileInputStream(Resource.FONT), 50);
         startButton.setFont(font);
         startButton.setOnAction(actionEvent -> {
-
-            SelectionScreen screen = new SelectionScreen();
-            screen.changeScene(primaryStage);
-
-
+            SelectionScreen s = new SelectionScreen();
+            s.changeToStreet(primaryStage);
         });
 
         Button settingsButton = new Button("Settings");
@@ -76,7 +73,7 @@ public class TitleScreen extends Application {
         closeButton.setFont(font);
         closeButton.setOnAction(e -> primaryStage.close());
 
-        Image knightImage = new Image(new FileInputStream(Resource.KNIGHT_PATH), 250, 250, false, false);
+        Image knightImage = new Image(new FileInputStream(Resource.KNIGHT), 250, 250, false, false);
         ImageView knight = new ImageView(knightImage);
 
         parent.setAlignment(Pos.CENTER);

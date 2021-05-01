@@ -4,12 +4,12 @@ import game.gameElements.environment.Player;
 import game.gameElements.environment.mobs.Enemy;
 import game.gameElements.environment.spells.Spell;
 import game.gameElements.environment.bars.HealthBar;
-import game.gameElements.environment.bars.ManaBar;
+import game.gameElements.windows.inventory.InventoryScreen;
+import game.gameElements.windows.selectionscreen.SelectionScreen;
 import game.resources.Resource;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -31,6 +31,7 @@ import game.resources.audio.AudioPlayer;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -41,18 +42,20 @@ public class FightWindow {
     private final Player player = Player.getPlayer();
     private final Enemy enemy = Fight.get().getEnemy();
 
+    private Stage stage;
+
     private final GridPane parent;
     private final AnchorPane enemyField;
     private final VBox playerInterface;
     private final VBox textField;
 
-    private HealthBar healthBar;
-    private ManaBar manaBar;
+
 
     private Button attackButton;
     private Button spellButton;
     private Button itemButton;
     private Button runButton;
+    private Button backButton;
 
     private static final int WIDTH = 1200;
     private static final int HEIGHT = 700;
@@ -97,16 +100,25 @@ public class FightWindow {
     private void initEnemyField() {
         ImageView imageEnemy = enemy.getImage();
         HealthBar bar = enemy.getHealthBar();
+        Label enemyHealth = bar.getStatus();
         enemyField.setPrefSize(WIDTH - 500, HEIGHT - 250);
+
+        backButton = new Button("Back");
+        Font font = Resource.getFont(20);
+        backButton.setFont(font);
+        backButton.setTextFill(Color.web("#222222"));
+        backButton.setStyle("-fx-background-color: red");
+        backButton.setOnAction(actionEvent -> returnBack());
+        backButton.setVisible(false);
 
         imageEnemy.setLayoutY(125);
         imageEnemy.setLayoutX(250);
 
         bar.setPrefSize(200, 20);
-        bar.setLayoutX(250 + 40);
-        bar.setLayoutY(300 + 35);
+        enemyHealth.setLayoutX(290);
+        enemyHealth.setLayoutY(335);
 
-        enemyField.getChildren().addAll(imageEnemy, bar);
+        enemyField.getChildren().addAll(backButton, imageEnemy, enemyHealth);
         parent.add(enemyField, 0, 0);
     }
 
@@ -117,11 +129,7 @@ public class FightWindow {
         playerInterface.setAlignment(Pos.BOTTOM_CENTER);
         playerInterface.setPrefSize(width, height);
 
-
-        healthBar = new HealthBar(player, 300, 15);
-        manaBar = new ManaBar(player, 300, 15);
-
-        playerInterface.getChildren().addAll(manaBar.getStatus(), healthBar.getStatus());
+        playerInterface.getChildren().addAll(player.getHealthBar().getStatus(), player.getManaBar().getStatus());
 
         parent.add(playerInterface, 1, 0);
     }
@@ -130,7 +138,7 @@ public class FightWindow {
         textField.setAlignment(Pos.CENTER);
         Font fontText = null;
         try {
-            fontText = Font.loadFont(new FileInputStream(Resource.FONT_PATH), 25);
+            fontText = Font.loadFont(new FileInputStream(Resource.FONT), 25);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -159,12 +167,7 @@ public class FightWindow {
         runButton = new Button("RUN");
 
         //set fonts
-        Font fontButton = null;
-        try {
-            fontButton = Font.loadFont(new FileInputStream(Resource.FONT_PATH), 35);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        Font fontButton = Resource.getFont(35);
         attackButton.setFont(fontButton);
         spellButton.setFont(fontButton);
         itemButton.setFont(fontButton);
@@ -174,7 +177,7 @@ public class FightWindow {
         //ATTACK-Button
         attackButton.setPrefSize(buttonPane.getPrefWidth() / 2, buttonPane.getPrefHeight() / 2);
         attackButton.setTextFill(Color.web("#d4c4be"));
-        attackButton.setStyle("-fx-background-color: #041158");
+        attackButton.setStyle("-fx-background-color: black");
         buttonPane.add(attackButton, 0, 0);
         attackButton.setOnAction(actionEvent -> {
             if (enemy.isDead()) {
@@ -189,7 +192,7 @@ public class FightWindow {
         //SPELL-Button
         spellButton.setPrefSize(buttonPane.getPrefWidth() / 2, buttonPane.getPrefHeight() / 2);
         spellButton.setTextFill(Color.web("#d4c4be"));
-        spellButton.setStyle("-fx-background-color: #041158");
+        spellButton.setStyle("-fx-background-color: black");
         buttonPane.add(spellButton, 1, 0);
         spellButton.setOnAction(action -> {
             List<Spell> spells = player.getSpells();
@@ -206,7 +209,7 @@ public class FightWindow {
                     ///////////////////////////////////////////////////////
                     ImageView explosion = null;
                     try {
-                         explosion = new ImageView(new Image(new FileInputStream(Resource.EXPLOSION_PATH)));
+                         explosion = new ImageView(new Image(new FileInputStream(Resource.EXPLOSION)));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -215,13 +218,10 @@ public class FightWindow {
                     enemyField.getChildren().add(explosion);
                     PauseTransition p = new PauseTransition(Duration.millis(1500));
                     ImageView finalExplosion = explosion;
-                    p.setOnFinished(e -> {
-                        enemyField.getChildren().removeAll(finalExplosion);
-                    });
+                    p.setOnFinished(e -> enemyField.getChildren().removeAll(finalExplosion));
                     p.play();
                     //////////////////////////////////////////////////////////
                     attackEnemy(dmg);
-                    manaBar.updateAndAnimate();
                 }
             }
 
@@ -231,22 +231,42 @@ public class FightWindow {
         //ITEM-Button
         itemButton.setPrefSize(buttonPane.getPrefWidth() / 2, buttonPane.getPrefHeight() / 2);
         itemButton.setTextFill(Color.web("#d4c4be"));
-        itemButton.setStyle("-fx-background-color: #041158");
+        itemButton.setStyle("-fx-background-color: black");
+        itemButton.setOnAction(e -> itemButtonEffect());
         buttonPane.add(itemButton, 0, 1);
 
 
         //RUN-Button
         runButton.setPrefSize(buttonPane.getPrefWidth() / 2, buttonPane.getPrefHeight() / 2);
         runButton.setTextFill(Color.web("#d4c4be"));
-        runButton.setStyle("-fx-background-color: #041158");
+        runButton.setStyle("-fx-background-color: black");
         buttonPane.add(runButton, 1, 1);
-        runButton.setOnAction(action -> Platform.exit());
+        runButton.setOnAction(action -> {
+            if (enemy.isDead()) {
+                return;
+            }
+            Random random = new Random();
+            int num = random.nextInt(3);
+            if (num < 2) {
+                animateText("You successfully ran away!");
+                pauseAllButtons(2000);
+                PauseTransition p = new PauseTransition(Duration.millis(2000));
+                p.setOnFinished(e -> returnBack());
+                p.play();
+            } else {
+                animateText("You failed to Run away..");
+                pauseAllButtons(2000);
+                PauseTransition p = new PauseTransition(Duration.millis(2000));
+                p.setOnFinished(e -> enemyAttack());
+                p.play();
+            }
+        });
         parent.add(buttonPane, 1, 1);
     }
 
 
     public void changeScene(Stage stage) {
-
+        this.stage = stage;
         stage.setTitle("FIGHT  !!!");
         stage.setResizable(true);
 
@@ -273,14 +293,14 @@ public class FightWindow {
             enemy.takesHitAnimation();
             pauseAllButtons(waitTime);
             PauseTransition p = new PauseTransition(Duration.millis(waitTime));
-            p.setOnFinished(e -> {
-                enemyAttack();
-            });
+            p.setOnFinished(e -> enemyAttack());
             p.play();
         } else {
             enemy.dieAnimation();
             animateText("You dealt " + dmgValue + " damage and you have slain an " + enemy.getName() + "!!");
-            enemyField.getChildren().removeAll(enemy.getHealthBar());
+            player.receiveGold(enemy.getGoldValue());
+            enemyField.getChildren().removeAll(enemy.getHealthBar(), enemy.getHealthBar().getStatus());
+            backButton.setVisible(true);
         }
     }
 
@@ -306,13 +326,17 @@ public class FightWindow {
         dmg = Math.round(dmg * 100.0) / 100.0;
         animateText("The " + enemy.getName() + " fought back and dealt " + dmg + " to you!");
         enemy.attackAnimation();
-        healthBar.updateAndAnimate();
 
         if (player.isDead()) {
             animateText("You died :(");
             //...
         }
 
+    }
+
+    private void returnBack() {
+        SelectionScreen.changeScene(stage);
+        Fight.get().resetFight();
     }
 
 
@@ -329,6 +353,17 @@ public class FightWindow {
             }
         };
         animation.play();
+    }
+
+    public void itemButtonEffect() {
+        if (enemy.isDead()) {
+            return;
+        }
+        if (player.getItems().isEmpty()) {
+            animateText("Empty Inventory");
+            return;
+        }
+        InventoryScreen.show();
     }
 
 }

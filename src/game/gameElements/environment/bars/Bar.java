@@ -26,7 +26,7 @@ public abstract class Bar extends ProgressBar {
         this.status = new Label(getStatusText(), this);
         Font font = null;
         try {
-            font = Font.loadFont(new FileInputStream(Resource.FONT_PATH), fontSize);
+            font = Font.loadFont(new FileInputStream(Resource.FONT), fontSize);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

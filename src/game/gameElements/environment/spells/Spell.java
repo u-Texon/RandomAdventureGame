@@ -15,12 +15,13 @@ public abstract class Spell {
     }
 
     public double cast(Mob target) {
-        if (Player.getPlayer().getCurrentMana() - manaCost < 0) {
+        Player player = Player.getPlayer();
+        if (player.getCurrentMana() - manaCost < 0) {
             //not enough mana
             return -1;
         }
-        Player.getPlayer().setCurrentMana(Player.getPlayer().getCurrentMana() - manaCost);
-        double magicDMG = Player.getPlayer().getMagicAD() + initialDmg;
+        player.setCurrentMana(player.getCurrentMana() - manaCost);
+        double magicDMG = player.getMagicAD() + initialDmg;
         Random random = new Random();
         double percentage = (random.nextInt(41) + 80);
         double dmgValue = magicDMG * (percentage / 100); //dmg = 80% up to 120%
